@@ -1,4 +1,4 @@
-![Image of Baracktocat](https://octodex.github.com/images/baracktocat.png)
+!(https://octodex.github.com/images/yaktocat.png)
 
 # React Srum Board
 
