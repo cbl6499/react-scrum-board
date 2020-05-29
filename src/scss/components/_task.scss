@@ -1,0 +1,14 @@
+.task {
+    &-container {
+        border: 1px solid lightgrey;
+        border-radius: 2px;
+        padding: 8px;
+        margin: 4px;
+        margin-bottom: 8px;
+        background-color: white;
+
+        &__dragging {
+            background-color: springgreen;
+        }
+    }
+}
