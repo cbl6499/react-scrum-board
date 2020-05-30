@@ -1,11 +1,13 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import '@atlaskit/css-reset'; // css reset.
 import '../scss/main.scss';
 import { DragDropContext } from 'react-beautiful-dnd';
 import initialData from '../initial-data';
 import Column from './column';
 
-export default class App extends React.Component {
+@observer
+class App extends React.Component {
     state = initialData;
 
     onDragEnd = (result) => {
@@ -89,3 +91,5 @@ export default class App extends React.Component {
         );
     }
 }
+
+export default App;
