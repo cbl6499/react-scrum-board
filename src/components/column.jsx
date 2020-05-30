@@ -35,7 +35,6 @@ export default class Column extends React.Component {
                             className={classnames('column-task-list', snapshot.isDraggingOver ? 'column-task-list__dragged-over' : null)}
                             ref={provided.innerRef}
                             {...provided.droppableProps}
-                            isDraggingOver={snapshot.isDraggingOver}
                         >
                             <InnerList tasks={this.props.tasks} />
                             {provided.placeholder}
