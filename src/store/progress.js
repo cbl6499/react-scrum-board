@@ -47,6 +47,7 @@ class progress {
         };
     }
 
+    // Remove from old id list (start) and add to new list (finish)
     @action.bound moveToList(start, finish, source, destination, draggableId) {
         const startTaskIds = Array.from(start.taskIds);
         startTaskIds.splice(source.index, 1);

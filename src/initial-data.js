@@ -1,3 +1,4 @@
+// No longer being used, left as reference for possible object structuring.
 const initialData = {
     tasks: {
         'task-1': { id: 'task-1', content: 'Take ou the garbage' },

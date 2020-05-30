@@ -8,6 +8,7 @@ import Column from './column';
 
 @observer
 class App extends React.Component {
+    // Handle Drag and Drop.
     onDragEnd = (result) => {
         const { destination, source, draggableId } = result;
 
@@ -28,7 +29,6 @@ class App extends React.Component {
         }
 
         // Moving from one list to another.
-        // Remove from old id list (start) and add to new list (finish)
         progressStore.moveToList(start, finish, source, destination, draggableId);
     };
 
