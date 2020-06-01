@@ -5,6 +5,8 @@ import '../scss/main.scss';
 import { DragDropContext } from 'react-beautiful-dnd';
 import progressStore from '../store/progress';
 import Column from './column';
+import Row from './row';
+import { toJS } from 'mobx';
 
 @observer
 class App extends React.Component {
@@ -38,11 +40,8 @@ class App extends React.Component {
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <div style={{ display: 'flex' }}>
-                    {progressStore.columnOrder.map((columnId) => {
-                        const column = progressStore.columns[columnId];
-                        const tasks = column.taskIds.map((taskId) => progressStore.tasks[taskId]);
-
-                        return <Column key={column.id} column={column} tasks={tasks} />;
+                    {progressStore.rows.map((row, index) => {
+                        return <Row key={row.id} row={row} rowIndex={index} />;
                     })}
                 </div>
             </DragDropContext>

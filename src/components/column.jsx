@@ -2,6 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import { Droppable } from 'react-beautiful-dnd';
 import Task from './task';
+import { toJS } from 'mobx';
 
 class InnerList extends React.Component {
     // Performance boost to only render when a change is happening.
