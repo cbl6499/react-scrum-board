@@ -4,7 +4,6 @@ import '@atlaskit/css-reset'; // css reset.
 import '../scss/main.scss';
 import { DragDropContext } from 'react-beautiful-dnd';
 import progressStore from '../store/progress';
-import Column from './column';
 import Row from './row';
 import { toJS } from 'mobx';
 
@@ -39,9 +38,11 @@ class App extends React.Component {
     render() {
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
-                <div style={{ display: 'flex' }}>
-                    {progressStore.rows.map((row, index) => {
-                        return <Row key={row.id} row={row} rowIndex={index} />;
+                <div>
+                    {progressStore.rowOrder.map((rowOrder) => {
+                        const row = progressStore.rows[rowOrder];
+
+                        return <Row key={row.id} row={row} />;
                     })}
                 </div>
             </DragDropContext>

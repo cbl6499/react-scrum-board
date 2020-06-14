@@ -8,8 +8,6 @@ export default class Row extends React.Component {
     // Handle Drag and Drop.
     onDragEnd = (result) => {
         const { destination, source, draggableId } = result;
-        const columns = toJS(this.props.row.columns);
-        const currentRowIndex = toJS(this.props.rowIndex);
 
         if (!destination) {
             return;
@@ -19,26 +17,26 @@ export default class Row extends React.Component {
             return;
         }
 
-        const start = columns.filter((column) => column.id === source.droppableId);
+        const start = this.props.row.columns[source.droppableId];
+        const finish = this.props.row.columns[destination.droppableId];
 
-        const finish = columns.filter((column) => column.id === destination.droppableId);
-
-        if (JSON.stringify(start) === JSON.stringify(finish)) {
-            progressStore.moveInList(start, source, destination, draggableId, currentRowIndex);
+        if (start === finish) {
+            progressStore.moveInList(start, source, destination, draggableId, this.props.row.id);
             return;
         }
 
         // Moving from one list to another.
-        progressStore.moveToList(start, finish, source, destination, draggableId, currentRowIndex);
+        progressStore.moveToList(start, finish, source, destination, draggableId, this.props.row.id);
     };
 
     render() {
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
-                <div style={{ display: 'flex' }}>
-                    {this.props.row.columnOrder.map((columnId, index) => {
-                        const column = this.props.row.columns[index];
-                        const tasks = column.taskIds.map((taskId, index) => this.props.row.tasks[index]);
+                <div className={'row-container'}>
+                    {this.props.row.columnOrder.map((columnId) => {
+                        const column = this.props.row.columns[columnId];
+                        const tasks = column.taskIds.map((taskId) => this.props.row.tasks[taskId]);
+
                         return <Column key={column.id} column={column} tasks={tasks} />;
                     })}
                 </div>

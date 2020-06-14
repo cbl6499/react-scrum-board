@@ -2,7 +2,6 @@ import React from 'react';
 import classnames from 'classnames';
 import { Droppable } from 'react-beautiful-dnd';
 import Task from './task';
-import { toJS } from 'mobx';
 
 class InnerList extends React.Component {
     // Performance boost to only render when a change is happening.
@@ -30,7 +29,7 @@ export default class Column extends React.Component {
         return (
             <div className={'column-container'}>
                 <h3 className={'column-title'}>{this.props.column.title}</h3>
-                <Droppable droppableId={this.props.column.id}>
+                <Droppable droppableId={this.props.column.id} direction={'horizontal'} type="task">
                     {(provided, snapshot) => (
                         <div
                             className={classnames('column-task-list', snapshot.isDraggingOver ? 'column-task-list__dragged-over' : null)}
