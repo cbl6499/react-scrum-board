@@ -4,6 +4,7 @@ class progress {
     @observable rows = {
         'row-1': {
             id: 'row-1',
+            title: '#824 Detail page',
             tasks: {
                 'task-1': { id: 'task-1', content: 'Take ou the garbage' },
                 'task-2': { id: 'task-2', content: 'Watch my favorite show' },
@@ -33,6 +34,7 @@ class progress {
         },
         'row-2': {
             id: 'row-2',
+            title: '#821 Add new emergency',
             tasks: {
                 'task-100': { id: 'task-100', content: 'Take ou the garbage 2' },
                 'task-200': { id: 'task-200', content: 'Watch my favorite show 2' },
@@ -75,6 +77,8 @@ class progress {
             taskIds: newTaskIds,
         };
 
+        console.log('CHANGE');
+
         this.rows[rowID] = {
             ...this.rows[rowID],
             columns: {
@@ -108,6 +112,14 @@ class progress {
                 [newFinish.id]: newFinish,
             },
         };
+    }
+
+    @action.bound moveRow(source, destination, draggableId) {
+        const startRowIds = Array.from(this.rowOrder);
+        startRowIds.splice(source.index, 1);
+        startRowIds.splice(destination.index, 0, draggableId);
+
+        this.rowOrder = startRowIds;
     }
 }
 

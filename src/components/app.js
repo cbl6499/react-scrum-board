@@ -2,7 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import '@atlaskit/css-reset'; // css reset.
 import '../scss/main.scss';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import progressStore from '../store/progress';
 import Row from './row';
 import { toJS } from 'mobx';
@@ -21,16 +21,7 @@ class App extends React.Component {
             return;
         }
 
-        const start = progressStore.columns[source.droppableId];
-        const finish = progressStore.columns[destination.droppableId];
-
-        if (start === finish) {
-            progressStore.moveInList(start, source, destination, draggableId);
-            return;
-        }
-
-        // Moving from one list to another.
-        progressStore.moveToList(start, finish, source, destination, draggableId);
+        progressStore.moveRow(source, destination, draggableId);
     };
 
     // DragDropContext requires onDragEnd.
@@ -38,13 +29,18 @@ class App extends React.Component {
     render() {
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
-                <div>
-                    {progressStore.rowOrder.map((rowOrder) => {
-                        const row = progressStore.rows[rowOrder];
+                <Droppable droppableId="row-dropzone">
+                    {(provided) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {progressStore.rowOrder.map((rowOrder, index) => {
+                                const row = progressStore.rows[rowOrder];
 
-                        return <Row key={row.id} row={row} />;
-                    })}
-                </div>
+                                return <Row key={row.id} row={row} index={index} />;
+                            })}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
             </DragDropContext>
         );
     }

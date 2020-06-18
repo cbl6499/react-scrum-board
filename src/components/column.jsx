@@ -29,7 +29,7 @@ export default class Column extends React.Component {
         return (
             <div className={'column-container'}>
                 <h3 className={'column-title'}>{this.props.column.title}</h3>
-                <Droppable droppableId={this.props.column.id} direction={'horizontal'} type="task">
+                <Droppable droppableId={this.props.column.id} direction={'horizontal'}>
                     {(provided, snapshot) => (
                         <div
                             className={classnames('column-task-list', snapshot.isDraggingOver ? 'column-task-list__dragged-over' : null)}
