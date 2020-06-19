@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import '@atlaskit/css-reset'; // css reset.
-import '../scss/main.scss';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import ProgressStore from '../store/progress';
 import Row from './row';

@@ -1,4 +1,4 @@
-import { observable, action, toJS } from 'mobx';
+import { observable, action } from 'mobx';
 
 class progress {
     @observable rows = {
@@ -88,7 +88,6 @@ class progress {
                 [newColumn.id]: newColumn,
             },
         };
-        console.log(toJS(this.rows));
     }
 
     // Remove from old id list (start) and add to new list (finish)
