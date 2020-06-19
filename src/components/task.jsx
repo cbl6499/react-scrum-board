@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { Draggable } from 'react-beautiful-dnd';
+import ProgressStore from '../store/progress';
 
 // Dragable requires draggableId and index.
 // Dragable needs to return a function as child.
@@ -19,11 +20,20 @@ export default class Task extends React.Component {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
+                        onMouseDown={() => this.setActiveIds()}
                     >
                         {this.props.task.content}
                     </div>
                 )}
             </Draggable>
         );
+    }
+
+    // Neede because of dnd nesting problems.
+    // Otherwise we would not know which task has been moved.
+    setActiveIds() {
+        ProgressStore.activeRowId = this.props.rowId;
+        ProgressStore.activbeColumnId = this.props.columnId;
+        ProgressStore.activeTaskId = this.props.task.id;
     }
 }

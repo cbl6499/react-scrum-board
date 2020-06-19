@@ -1,6 +1,5 @@
 import React from 'react';
-import { toJS } from 'mobx';
-import { DragDropContext, Draggable } from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
 import progressStore from '../store/progress';
 import Column from './column';
 
@@ -33,19 +32,19 @@ export default class Row extends React.Component {
         return (
             <Draggable draggableId={this.props.row.id} index={this.props.index}>
                 {(provided) => (
-                    <DragDropContext onDragEnd={this.onDragEnd}>
-                        <div className={'row-container'} {...provided.draggableProps} ref={provided.innerRef}>
-                            <h1 className={'row-title'} {...provided.dragHandleProps}>
-                                {this.props.row.title}
-                            </h1>
-                            {this.props.row.columnOrder.map((columnId) => {
-                                const column = this.props.row.columns[columnId];
-                                const tasks = column.taskIds.map((taskId) => this.props.row.tasks[taskId]);
+                    // <DragDropContext onDragEnd={this.onDragEnd}>
+                    <div className={'row-container'} {...provided.draggableProps} ref={provided.innerRef}>
+                        <h1 className={'row-title'} {...provided.dragHandleProps}>
+                            {this.props.row.title}
+                        </h1>
+                        {this.props.row.columnOrder.map((columnId) => {
+                            const column = this.props.row.columns[columnId];
+                            const tasks = column.taskIds.map((taskId) => this.props.row.tasks[taskId]);
 
-                                return <Column key={column.id} column={column} tasks={tasks} />;
-                            })}
-                        </div>
-                    </DragDropContext>
+                            return <Column key={column.id} column={column} tasks={tasks} rowId={this.props.row.id} />;
+                        })}
+                    </div>
+                    // </DragDropContext>
                 )}
             </Draggable>
         );

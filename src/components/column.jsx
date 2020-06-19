@@ -13,7 +13,7 @@ class InnerList extends React.Component {
     }
 
     render() {
-        return this.props.tasks.map((task, index) => <Task key={task.id} task={task} index={index} />);
+        return this.props.tasks.map((task, index) => <Task key={task.id} task={task} index={index} columnId={this.props.columnId} rowId={this.props.rowId} />);
     }
 }
 
@@ -29,14 +29,14 @@ export default class Column extends React.Component {
         return (
             <div className={'column-container'}>
                 <h3 className={'column-title'}>{this.props.column.title}</h3>
-                <Droppable droppableId={this.props.column.id} direction={'horizontal'}>
+                <Droppable droppableId={this.props.column.id} direction={'horizontal'} type={'Task'}>
                     {(provided, snapshot) => (
                         <div
                             className={classnames('column-task-list', snapshot.isDraggingOver ? 'column-task-list__dragged-over' : null)}
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                         >
-                            <InnerList tasks={this.props.tasks} />
+                            <InnerList tasks={this.props.tasks} columnId={this.props.column.id} rowId={this.props.rowId} />
                             {provided.placeholder}
                         </div>
                     )}
