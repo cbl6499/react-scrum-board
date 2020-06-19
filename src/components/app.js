@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import '@atlaskit/css-reset'; // css reset.
 import '../scss/main.scss';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import progressStore from '../store/progress';
+import ProgressStore from '../store/progress';
 import Row from './row';
 
 @observer
@@ -21,22 +21,22 @@ class App extends React.Component {
         }
 
         if (type === 'Row') {
-            progressStore.moveRow(source, destination, draggableId);
+            ProgressStore.moveRow(source, destination, draggableId);
         }
 
         // We need to use forceUpdate because of nesting problems, which hinder a rerender.
-        if (type === 'Task') {
-            const start = progressStore.rows[progressStore.activeRowId].columns[source.droppableId];
-            const finish = progressStore.rows[progressStore.activeRowId].columns[destination.droppableId];
+        if (type === ProgressStore.activeRowId) {
+            const start = ProgressStore.rows[ProgressStore.activeRowId].columns[source.droppableId];
+            const finish = ProgressStore.rows[ProgressStore.activeRowId].columns[destination.droppableId];
 
             if (start === finish) {
-                progressStore.moveInList(start, source, destination, draggableId);
+                ProgressStore.moveInList(start, source, destination, draggableId);
                 this.forceUpdate();
                 return;
             }
 
             // Moving from one list to another.
-            progressStore.moveToList(start, finish, source, destination, draggableId);
+            ProgressStore.moveToList(start, finish, source, destination, draggableId);
             this.forceUpdate();
         }
     };
@@ -49,8 +49,8 @@ class App extends React.Component {
                 <Droppable droppableId="row-dropzone" type={'Row'}>
                     {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {progressStore.rowOrder.map((rowOrder, index) => {
-                                const row = progressStore.rows[rowOrder];
+                            {ProgressStore.rowOrder.map((rowOrder, index) => {
+                                const row = ProgressStore.rows[rowOrder];
 
                                 return <Row key={row.id} row={row} index={index} />;
                             })}

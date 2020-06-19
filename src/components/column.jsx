@@ -24,12 +24,13 @@ class InnerList extends React.Component {
 // snapshot contains two properties: isDraggingOver (ture a draggable is dragging over a droppable)
 // and draggingOverWith (returns the id of the draggable component that is currently dragging over the droppable. Returns null if the droppable is not being dragged over).
 // Set direaction on Droppable component with direction={'horizontal'}.
+// Type is set to the row id so that it is not possible to move tasks between rows.
 export default class Column extends React.Component {
     render() {
         return (
             <div className={'column-container'}>
                 <h3 className={'column-title'}>{this.props.column.title}</h3>
-                <Droppable droppableId={this.props.column.id} direction={'horizontal'} type={'Task'}>
+                <Droppable droppableId={this.props.column.id} direction={'horizontal'} type={this.props.rowId}>
                     {(provided, snapshot) => (
                         <div
                             className={classnames('column-task-list', snapshot.isDraggingOver ? 'column-task-list__dragged-over' : null)}
