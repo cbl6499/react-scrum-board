@@ -1,15 +1,15 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import '@atlaskit/css-reset'; // css reset.
-import '../scss/main.scss';
-import { DragDropContext } from 'react-beautiful-dnd';
-import initialData from '../initial-data';
-import Column from './column';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import ProgressStore from '../store/progress';
+import Row from './row';
 
-export default class App extends React.Component {
-    state = initialData;
-
+@observer
+class App extends React.Component {
+    // Handle Drag and Drop.
     onDragEnd = (result) => {
-        const { destination, source, draggableId } = result;
+        const { destination, source, draggableId, type } = result;
 
         if (!destination) {
             return;
@@ -19,57 +19,25 @@ export default class App extends React.Component {
             return;
         }
 
-        const start = this.state.columns[source.droppableId];
-        const finish = this.state.columns[destination.droppableId];
-
-        if (start === finish) {
-            const newTaskIds = Array.from(start.taskIds);
-            newTaskIds.splice(source.index, 1);
-            newTaskIds.splice(destination.index, 0, draggableId);
-
-            const newColumn = {
-                ...start,
-                taskIds: newTaskIds,
-            };
-
-            const newState = {
-                ...this.state,
-                columns: {
-                    ...this.state.columns,
-                    [newColumn.id]: newColumn,
-                },
-            };
-
-            this.setState(newState);
-            return;
+        if (type === 'Row') {
+            ProgressStore.moveRow(source, destination, draggableId);
         }
 
-        // Moving from one list to another.
-        // Remove from old id list (start) and add to new list (finish)
-        const startTaskIds = Array.from(start.taskIds);
-        startTaskIds.splice(source.index, 1);
-        const newStart = {
-            ...start,
-            taskIds: startTaskIds,
-        };
+        // We need to use forceUpdate because of nesting problems, which hinder a rerender.
+        if (type === ProgressStore.activeRowId) {
+            const start = ProgressStore.rows[ProgressStore.activeRowId].columns[source.droppableId];
+            const finish = ProgressStore.rows[ProgressStore.activeRowId].columns[destination.droppableId];
 
-        const finishTaskIds = Array.from(finish.taskIds);
-        finishTaskIds.splice(destination.index, 0, draggableId);
-        const newFinish = {
-            ...finish,
-            taskIds: finishTaskIds,
-        };
+            if (start === finish) {
+                ProgressStore.moveInList(start, source, destination, draggableId);
+                this.forceUpdate();
+                return;
+            }
 
-        const newState = {
-            ...this.state,
-            columns: {
-                ...this.state.columns,
-                [newStart.id]: newStart,
-                [newFinish.id]: newFinish,
-            },
-        };
-
-        this.setState(newState);
+            // Moving from one list to another.
+            ProgressStore.moveToList(start, finish, source, destination, draggableId);
+            this.forceUpdate();
+        }
     };
 
     // DragDropContext requires onDragEnd.
@@ -77,15 +45,21 @@ export default class App extends React.Component {
     render() {
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
-                <div style={{ display: 'flex' }}>
-                    {this.state.columnOrder.map((columnId) => {
-                        const column = this.state.columns[columnId];
-                        const tasks = column.taskIds.map((taskId) => this.state.tasks[taskId]);
+                <Droppable droppableId="row-dropzone" type={'Row'}>
+                    {(provided) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {ProgressStore.rowOrder.map((rowOrder, index) => {
+                                const row = ProgressStore.rows[rowOrder];
 
-                        return <Column key={column.id} column={column} tasks={tasks} />;
-                    })}
-                </div>
+                                return <Row key={row.id} row={row} index={index} />;
+                            })}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
             </DragDropContext>
         );
     }
 }
+
+export default App;

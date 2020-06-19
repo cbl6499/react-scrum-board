@@ -1,6 +1,14 @@
 import React from 'react';
-import classnames from 'classnames';
+import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
+import ProgressStore from '../store/progress';
+import { Card, CardContent } from '@material-ui/core';
+
+// Custom props for material ui components can not be of type boolean.
+const TaskCard = styled(Card)`
+    background-color: ${(props) => (props.dragging === 'true' ? 'springgreen' : 'white')};
+    margin: 14px;
+`;
 
 // Dragable requires draggableId and index.
 // Dragable needs to return a function as child.
@@ -14,17 +22,26 @@ export default class Task extends React.Component {
         return (
             <Draggable draggableId={this.props.task.id} index={this.props.index}>
                 {(provided, snapshot) => (
-                    <div
-                        className={classnames('task-container', snapshot.isDragging ? 'task-container__dragging' : null)}
+                    <TaskCard
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
-                        isDragging={snapshot.isDragging}
+                        onMouseDown={() => this.setActiveIds()}
+                        variant={'outlined'}
+                        dragging={snapshot.isDragging.toString()}
                     >
-                        {this.props.task.content}
-                    </div>
+                        <CardContent>{this.props.task.content}</CardContent>
+                    </TaskCard>
                 )}
             </Draggable>
         );
+    }
+
+    // Neede because of dnd nesting problems.
+    // Otherwise we would not know which task has been moved.
+    setActiveIds() {
+        ProgressStore.activeRowId = this.props.rowId;
+        ProgressStore.activbeColumnId = this.props.columnId;
+        ProgressStore.activeTaskId = this.props.task.id;
     }
 }
