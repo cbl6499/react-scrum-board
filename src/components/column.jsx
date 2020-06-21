@@ -1,7 +1,11 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 import styled from 'styled-components';
 import { Droppable } from 'react-beautiful-dnd';
 import Task from './task';
+import { IconButton } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/AddCircleOutline';
+import ProgressStore from '../store/progress';
 
 const Container = styled.div`
     margin: 8px;
@@ -14,6 +18,13 @@ const Container = styled.div`
     flex-direction: column;
 `;
 
+const HeaderContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 12px;
+`;
+
 const Title = styled.h3`
     padding: 8px;
 `;
@@ -24,6 +35,10 @@ const TaskList = styled.div`
     background-color: ${(props) => (props.isDragging ? 'skyblue' : 'white')};
     min-height: 50px;
     display: flex;
+`;
+
+const AddTaskButton = styled(IconButton)`
+    color: black;
 `;
 
 class InnerList extends React.Component {
@@ -48,11 +63,17 @@ class InnerList extends React.Component {
 // and draggingOverWith (returns the id of the draggable component that is currently dragging over the droppable. Returns null if the droppable is not being dragged over).
 // Set direaction on Droppable component with direction={'horizontal'}.
 // Type is set to the row id so that it is not possible to move tasks between rows.
+@observer
 export default class Column extends React.Component {
     render() {
         return (
             <Container>
-                <Title>{this.props.column.title}</Title>
+                <HeaderContainer>
+                    <Title>{this.props.column.title}</Title>
+                    <AddTaskButton aria-label="delete" onClick={() => this.addNewTask()}>
+                        <AddIcon />
+                    </AddTaskButton>
+                </HeaderContainer>
                 <Droppable droppableId={this.props.column.id} direction={'horizontal'} type={this.props.rowId}>
                     {(provided, snapshot) => (
                         <TaskList ref={provided.innerRef} {...provided.droppableProps} isDragging={snapshot.isDraggingOver}>
@@ -63,5 +84,9 @@ export default class Column extends React.Component {
                 </Droppable>
             </Container>
         );
+    }
+
+    addNewTask() {
+        ProgressStore.addNewTask(this.props.rowId, this.props.column.id);
     }
 }

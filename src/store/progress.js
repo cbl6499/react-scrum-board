@@ -123,6 +123,31 @@ class progress {
 
         this.rowOrder = startRowIds;
     }
+
+    @action.bound addNewTask(rowId, columnId) {
+        const newTaskId = 'task-' + Math.floor(Math.random() * 100 + 1);
+
+        this.rows[rowId].tasks = {
+            ...this.rows[rowId].tasks,
+            [newTaskId]: { id: newTaskId, content: 'Take ou the garbage ' + Math.floor(Math.random() * 100 + 1) },
+        };
+
+        const column = this.rows[rowId].columns[columnId];
+        column.taskIds.push(newTaskId);
+
+        const newTask = {
+            ...this.rows[rowId].columns[columnId],
+            taskIds: column.taskIds,
+        };
+
+        this.rows[rowId] = {
+            ...this.rows[rowId],
+            columns: {
+                ...this.rows[rowId].columns,
+                [columnId]: newTask,
+            },
+        };
+    }
 }
 
 const progressStore = new progress();
