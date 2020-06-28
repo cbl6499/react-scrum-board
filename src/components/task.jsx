@@ -26,7 +26,7 @@ export default class Task extends React.Component {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
-                        onMouseDown={() => this.setActiveIds()}
+                        // onMouseDown={() => this.setActiveIds()}
                         variant={'outlined'}
                         dragging={snapshot.isDragging.toString()}
                     >
@@ -35,13 +35,5 @@ export default class Task extends React.Component {
                 )}
             </Draggable>
         );
-    }
-
-    // Neede because of dnd nesting problems.
-    // Otherwise we would not know which task has been moved.
-    setActiveIds() {
-        ProgressStore.activeRowId = this.props.rowId;
-        ProgressStore.activbeColumnId = this.props.columnId;
-        ProgressStore.activeTaskId = this.props.task.id;
     }
 }

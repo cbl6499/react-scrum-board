@@ -71,7 +71,7 @@ class progress {
     @observable activeTaskId = '';
 
     // Needs to be broken down in multiple const because mobx will not direclty the update in the nested object is too far down.
-    @action.bound moveInList(start, source, destination, draggableId) {
+    @action.bound moveInList(start, source, destination, draggableId, rowId) {
         const newTaskIds = Array.from(start.taskIds);
         newTaskIds.splice(source.index, 1);
         newTaskIds.splice(destination.index, 0, draggableId);
@@ -81,17 +81,17 @@ class progress {
             taskIds: newTaskIds,
         };
 
-        this.rows[this.activeRowId] = {
-            ...this.rows[this.activeRowId],
+        this.rows[rowId] = {
+            ...this.rows[rowId],
             columns: {
-                ...this.rows[this.activeRowId].columns,
+                ...this.rows[rowId].columns,
                 [newColumn.id]: newColumn,
             },
         };
     }
 
     // Remove from old id list (start) and add to new list (finish)
-    @action.bound moveToList(start, finish, source, destination, draggableId) {
+    @action.bound moveToList(start, finish, source, destination, draggableId, rowId) {
         const startTaskIds = Array.from(start.taskIds);
         startTaskIds.splice(source.index, 1);
         const newStart = {
@@ -106,10 +106,10 @@ class progress {
             taskIds: finishTaskIds,
         };
 
-        this.rows[this.activeRowId] = {
-            ...this.rows[this.activeRowId],
+        this.rows[rowId] = {
+            ...this.rows[rowId],
             columns: {
-                ...this.rows[this.activeRowId].columns,
+                ...this.rows[rowId].columns,
                 [newStart.id]: newStart,
                 [newFinish.id]: newFinish,
             },
