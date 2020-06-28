@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Draggable } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 import progressStore from '../store/progress';
 import Column from './column';
 
@@ -45,23 +45,21 @@ export default class Row extends React.Component {
         progressStore.moveToList(start, finish, source, destination, draggableId, this.props.row.id);
     };
 
+    // DragDropContext requires onDragEnd.
+    // DragDropContext needs to return a function as child.
     render() {
         return (
-            <Draggable draggableId={this.props.row.id} index={this.props.index}>
-                {(provided) => (
-                    // <DragDropContext onDragEnd={this.onDragEnd}>
-                    <Container {...provided.draggableProps} ref={provided.innerRef}>
-                        <Title {...provided.dragHandleProps}>{this.props.row.title}</Title>
-                        {this.props.row.columnOrder.map((columnId) => {
-                            const column = this.props.row.columns[columnId];
-                            const tasks = column.taskIds.map((taskId) => this.props.row.tasks[taskId]);
+            <DragDropContext onDragEnd={this.onDragEnd}>
+                <Container>
+                    <Title>{this.props.row.title}</Title>
+                    {this.props.row.columnOrder.map((columnId) => {
+                        const column = this.props.row.columns[columnId];
+                        const tasks = column.taskIds.map((taskId) => this.props.row.tasks[taskId]);
 
-                            return <Column key={column.id} column={column} tasks={tasks} rowId={this.props.row.id} />;
-                        })}
-                    </Container>
-                    // </DragDropContext>
-                )}
-            </Draggable>
+                        return <Column key={column.id} column={column} tasks={tasks} rowId={this.props.row.id} />;
+                    })}
+                </Container>
+            </DragDropContext>
         );
     }
 }
