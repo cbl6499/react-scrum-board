@@ -5,7 +5,8 @@ import { Droppable } from 'react-beautiful-dnd';
 import Task from './task';
 import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
-import ProgressStore from '../store/progress';
+import progressStore from '../store/progress';
+import { action } from 'mobx';
 
 const Container = styled.div`
     margin: 8px;
@@ -86,7 +87,9 @@ export default class Column extends React.Component {
         );
     }
 
-    addNewTask() {
-        ProgressStore.addNewTask(this.props.rowId, this.props.column.id);
+    @action.bound addNewTask() {
+        progressStore.activeRowId = this.props.rowId;
+        progressStore.activeColumnId = this.props.column.id;
+        progressStore.showAddTaskModal = true;
     }
 }

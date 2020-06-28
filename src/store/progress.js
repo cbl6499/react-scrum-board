@@ -96,10 +96,9 @@ class progress {
 
     @observable rowOrder = ['row-1', 'row-2', 'row-3'];
 
-    @observable activeRowId = '';
-    @observable activbeColumnId = '';
-    @observable activeTaskId = '';
-
+    @observable showAddTaskModal = false;
+    @observable activeRowId;
+    @observable activeColumnId;
     // Needs to be broken down in multiple const because mobx will not direclty the update in the nested object is too far down.
     @action.bound moveInList(start, source, destination, draggableId, rowId) {
         const newTaskIds = Array.from(start.taskIds);
@@ -146,29 +145,31 @@ class progress {
         };
     }
 
-    @action.bound addNewTask(rowId, columnId) {
+    @action.bound addNewTask(taskName) {
         const newTaskId = 'task-' + Math.floor(Math.random() * 10000 + 1);
 
-        this.rows[rowId].tasks = {
-            ...this.rows[rowId].tasks,
-            [newTaskId]: { id: newTaskId, content: 'Take ou the garbage ' + Math.floor(Math.random() * 10000 + 1) },
+        this.rows[this.activeRowId].tasks = {
+            ...this.rows[this.activeRowId].tasks,
+            [newTaskId]: { id: newTaskId, content: taskName },
         };
 
-        const column = this.rows[rowId].columns[columnId];
+        const column = this.rows[this.activeRowId].columns[this.activeColumnId];
         column.taskIds.push(newTaskId);
 
         const newTask = {
-            ...this.rows[rowId].columns[columnId],
+            ...this.rows[this.activeRowId].columns[this.activeColumnId],
             taskIds: column.taskIds,
         };
 
-        this.rows[rowId] = {
-            ...this.rows[rowId],
+        this.rows[this.activeRowId] = {
+            ...this.rows[this.activeRowId],
             columns: {
-                ...this.rows[rowId].columns,
-                [columnId]: newTask,
+                ...this.rows[this.activeRowId].columns,
+                [this.activeColumnIdumnId]: newTask,
             },
         };
+
+        this.showAddTaskModal = false;
     }
 
     @action.bound addNewRow() {

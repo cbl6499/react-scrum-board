@@ -5,10 +5,10 @@ import App from './components/app';
 import { StylesProvider } from '@material-ui/core';
 
 ReactDOM.render(
-    <React.StrictMode>
+    <React.Fragment>
         <StylesProvider injectFirst>
             <App />
         </StylesProvider>
-    </React.StrictMode>,
+    </React.Fragment>,
     document.getElementById('root')
 );
