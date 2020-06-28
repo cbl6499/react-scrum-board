@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { DragDropContext } from 'react-beautiful-dnd';
 import progressStore from '../store/progress';
 import Column from './column';
+import { IconButton } from '@material-ui/core';
+import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
 
 const Container = styled.div`
     margin: 8px;
@@ -10,14 +13,34 @@ const Container = styled.div`
     background-color: white;
     border-radius: 2px;
     display: flex;
+    position: relative;
 `;
 
-const Title = styled.h1`
+const TitleContainer = styled.div`
+    width: 250px;
+    display: flex;
+`;
+
+const Title = styled.h2`
     justify-content: center;
     align-self: center;
     margin-left: 20px;
     margin-right: 20px;
-    width: 170px;
+    margin-top: 0px;
+`;
+
+const ArrowUpButton = styled(IconButton)`
+    color: black;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+`;
+
+const ArrowDownButton = styled(IconButton)`
+    color: black;
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
 `;
 
 export default class Row extends React.Component {
@@ -51,7 +74,21 @@ export default class Row extends React.Component {
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <Container>
-                    <Title>{this.props.row.title}</Title>
+                    <TitleContainer>
+                        {this.props.index > 1 && (
+                            <ArrowUpButton aria-label="delete" onClick={() => progressStore.moveRow(this.props.index, this.props.index - 1)}>
+                                <ArrowUpIcon />
+                            </ArrowUpButton>
+                        )}
+
+                        <Title>{this.props.row.title}</Title>
+
+                        {this.props.index > 0 && this.props.index < progressStore.rowOrder.length - 1 && (
+                            <ArrowDownButton aria-label="delete" onClick={() => progressStore.moveRow(this.props.index, this.props.index + 1)}>
+                                <ArrowDownIcon />
+                            </ArrowDownButton>
+                        )}
+                    </TitleContainer>
                     {this.props.row.columnOrder.map((columnId) => {
                         const column = this.props.row.columns[columnId];
                         const tasks = column.taskIds.map((taskId) => this.props.row.tasks[taskId]);

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
-import ProgressStore from '../store/progress';
 import { Card, CardContent } from '@material-ui/core';
 
 // Custom props for material ui components can not be of type boolean.

@@ -1,10 +1,10 @@
-import { observable, action } from 'mobx';
+import { observable, action, toJS } from 'mobx';
 
 class progress {
     @observable rows = {
         'row-1': {
             id: 'row-1',
-            title: '#824 Detail page',
+            title: 'Supports',
             tasks: {
                 'task-1': { id: 'task-1', content: 'Take ou the garbage' },
                 'task-2': { id: 'task-2', content: 'Watch my favorite show' },
@@ -62,9 +62,39 @@ class progress {
             },
             columnOrder: ['column-100', 'column-200', 'column-300'],
         },
+        'row-3': {
+            id: 'row-3',
+            title: '#822 Edit emergency',
+            tasks: {
+                'task-1000': { id: 'task-1000', content: 'Take ou the garbage 2' },
+                'task-2000': { id: 'task-2000', content: 'Watch my favorite show 2' },
+                'task-3000': { id: 'task-3000', content: 'Charge my phone 2' },
+                'task-4000': { id: 'task-4000', content: 'Cook dinner 2' },
+                'task-5000': { id: 'task-5000', content: 'Code a scrum board in react 2' },
+                'task-6000': { id: 'task-6000', content: 'Go to bed 2' },
+            },
+            columns: {
+                'column-1000': {
+                    id: 'column-1000',
+                    title: 'To do',
+                    taskIds: ['task-1000', 'task-2000', 'task-3000', 'task-4000', 'task-5000', 'task-6000'],
+                },
+                'column-2000': {
+                    id: 'column-2000',
+                    title: 'In progress',
+                    taskIds: [],
+                },
+                'column-3000': {
+                    id: 'column-3000',
+                    title: 'Done',
+                    taskIds: [],
+                },
+            },
+            columnOrder: ['column-1000', 'column-2000', 'column-3000'],
+        },
     };
 
-    @observable rowOrder = ['row-1', 'row-2'];
+    @observable rowOrder = ['row-1', 'row-2', 'row-3'];
 
     @observable activeRowId = '';
     @observable activbeColumnId = '';
@@ -116,20 +146,12 @@ class progress {
         };
     }
 
-    @action.bound moveRow(source, destination, draggableId) {
-        const startRowIds = Array.from(this.rowOrder);
-        startRowIds.splice(source.index, 1);
-        startRowIds.splice(destination.index, 0, draggableId);
-
-        this.rowOrder = startRowIds;
-    }
-
     @action.bound addNewTask(rowId, columnId) {
-        const newTaskId = 'task-' + Math.floor(Math.random() * 100 + 1);
+        const newTaskId = 'task-' + Math.floor(Math.random() * 10000 + 1);
 
         this.rows[rowId].tasks = {
             ...this.rows[rowId].tasks,
-            [newTaskId]: { id: newTaskId, content: 'Take ou the garbage ' + Math.floor(Math.random() * 100 + 1) },
+            [newTaskId]: { id: newTaskId, content: 'Take ou the garbage ' + Math.floor(Math.random() * 10000 + 1) },
         };
 
         const column = this.rows[rowId].columns[columnId];
@@ -147,6 +169,49 @@ class progress {
                 [columnId]: newTask,
             },
         };
+    }
+
+    @action.bound addNewRow() {
+        let newRowId = 'row-' + Math.floor(Math.random() * 10000 + 1);
+        let newColumnId = 'column-' + Math.floor(Math.random() * 10000 + 1);
+        this.rows = {
+            ...this.rows,
+            [newRowId]: {
+                id: newRowId,
+                title: '#' + Math.floor(Math.random() * 10000 + 1) + ' ' + newRowId,
+                tasks: {},
+                columns: {
+                    [newColumnId]: {
+                        id: newColumnId,
+                        title: 'To do',
+                        taskIds: [],
+                    },
+                    [newColumnId + 1]: {
+                        id: newColumnId + 1,
+                        title: 'In progress',
+                        taskIds: [],
+                    },
+                    [newColumnId + 2]: {
+                        id: newColumnId + 2,
+                        title: 'Done',
+                        taskIds: [],
+                    },
+                },
+                columnOrder: [newColumnId, newColumnId + 1, newColumnId + 2],
+            },
+        };
+
+        this.rowOrder.push(newRowId);
+    }
+
+    @action.bound moveRow(from, to) {
+        let tempArray = toJS(this.rowOrder);
+        let temp = tempArray[from];
+
+        tempArray.splice(from, 1);
+        tempArray.splice(to, 0, temp);
+
+        this.rowOrder = tempArray;
     }
 }
 
