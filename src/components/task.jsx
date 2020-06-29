@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
-import { Card, CardContent } from '@material-ui/core';
+import { Card, CardContent, IconButton } from '@material-ui/core';
+import AddPersonIcon from '@material-ui/icons/PersonAddOutlined';
 
 // Custom props for material ui components can not be of type boolean.
 const TaskCard = styled(Card)`
@@ -9,12 +10,22 @@ const TaskCard = styled(Card)`
     margin: 8px;
     min-width: 200px;
     padding: 0px;
+    position: relative;
 `;
 
 const TaskContent = styled(CardContent)`
     padding: 4px 0px 0px 4px;
     color: #172b4d;
     display: block;
+`;
+
+const AddPersonButton = styled(IconButton)`
+    color: black;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    height: 15px;
+    width: 15px;
 `;
 
 // Dragable requires draggableId and index.
@@ -38,6 +49,9 @@ export default class Task extends React.Component {
                         dragging={snapshot.isDragging.toString()}
                     >
                         <TaskContent>{this.props.task.content}</TaskContent>
+                        <AddPersonButton aria-label="delete" onClick={() => console.log('whoop')}>
+                            <AddPersonIcon fontSize="small" />
+                        </AddPersonButton>
                     </TaskCard>
                 )}
             </Draggable>

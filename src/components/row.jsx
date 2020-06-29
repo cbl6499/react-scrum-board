@@ -79,7 +79,7 @@ export default class Row extends React.Component {
                 <Container>
                     <TitleContainer>
                         {this.props.index > 1 && (
-                            <ArrowUpButton aria-label="delete" onClick={() => progressStore.moveRow(this.props.index, this.props.index - 1)}>
+                            <ArrowUpButton aria-label="up" onClick={() => progressStore.moveRow(this.props.index, this.props.index - 1)}>
                                 <ArrowUpIcon />
                             </ArrowUpButton>
                         )}
@@ -87,7 +87,7 @@ export default class Row extends React.Component {
                         <Title>{this.props.row.title}</Title>
 
                         {this.props.index > 0 && this.props.index < progressStore.rowOrder.length - 1 && (
-                            <ArrowDownButton aria-label="delete" onClick={() => progressStore.moveRow(this.props.index, this.props.index + 1)}>
+                            <ArrowDownButton aria-label="down" onClick={() => progressStore.moveRow(this.props.index, this.props.index + 1)}>
                                 <ArrowDownIcon />
                             </ArrowDownButton>
                         )}
