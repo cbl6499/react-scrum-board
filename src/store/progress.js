@@ -97,6 +97,8 @@ class progress {
     @observable rowOrder = ['row-1', 'row-2', 'row-3'];
 
     @observable showAddTaskModal = false;
+    @observable showAddStoryModal = false;
+
     @observable activeRowId;
     @observable activeColumnId;
     // Needs to be broken down in multiple const because mobx will not direclty the update in the nested object is too far down.
@@ -172,14 +174,14 @@ class progress {
         this.showAddTaskModal = false;
     }
 
-    @action.bound addNewRow() {
+    @action.bound addNewStory(storyName) {
         let newRowId = 'row-' + Math.floor(Math.random() * 10000 + 1);
         let newColumnId = 'column-' + Math.floor(Math.random() * 10000 + 1);
         this.rows = {
             ...this.rows,
             [newRowId]: {
                 id: newRowId,
-                title: '#' + Math.floor(Math.random() * 10000 + 1) + ' ' + newRowId,
+                title: storyName,
                 tasks: {},
                 columns: {
                     [newColumnId]: {
@@ -203,6 +205,7 @@ class progress {
         };
 
         this.rowOrder.push(newRowId);
+        this.showAddStoryModal = false;
     }
 
     @action.bound moveRow(from, to) {

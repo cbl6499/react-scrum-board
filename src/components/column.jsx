@@ -10,9 +10,9 @@ import { action } from 'mobx';
 
 const Container = styled.div`
     margin: 8px;
-    border: 1px solid lightgrey;
-    border-radius: 2px;
-    min-width: 200px;
+    border: 1px solid darkgray;
+    background-color: white;
+    border-radius: 5px;
 
     /* flex is needed when using multiple columns to be able to drag a draggable to another column. */
     display: flex;
@@ -23,23 +23,27 @@ const HeaderContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 12px;
+    padding: 8px;
+    min-width: 200px;
 `;
 
-const Title = styled.h3`
+const Title = styled.h4`
     padding: 8px;
+    align-self: center;
 `;
 
 const TaskList = styled.div`
-    padding: 8px;
     transition: background-color 0.2s ease;
     background-color: ${(props) => (props.isDragging ? 'skyblue' : 'white')};
-    min-height: 50px;
+    height: 100%;
     display: flex;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
 `;
 
 const AddTaskButton = styled(IconButton)`
     color: black;
+    padding: 0px;
 `;
 
 class InnerList extends React.Component {

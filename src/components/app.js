@@ -30,6 +30,8 @@ const AddRowButton = styled(Button)`
 @observer
 class App extends React.Component {
     @observable taskName = '';
+    @observable storyName = '';
+
     render() {
         return (
             <Container>
@@ -38,7 +40,7 @@ class App extends React.Component {
 
                     return <Row key={row.id} row={row} index={index} />;
                 })}
-                <AddRowButton variant="contained" endIcon={<AddIcon />} onClick={() => progressStore.addNewRow()}>
+                <AddRowButton variant="contained" endIcon={<AddIcon />} onClick={() => (progressStore.showAddStoryModal = true)}>
                     Neue Story
                 </AddRowButton>
 
@@ -48,10 +50,50 @@ class App extends React.Component {
                         <TextField autoFocus margin="dense" id="title" label="Name" fullWidth required onChange={(event) => (this.taskName = event.target.value)} />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => (progressStore.showAddTaskModal = false)} color="primary">
+                        <Button
+                            onClick={() => {
+                                progressStore.showAddTaskModal = false;
+                                this.taskName = '';
+                            }}
+                            color="primary"
+                        >
                             Abbrechen
                         </Button>
-                        <Button onClick={() => progressStore.addNewTask(this.taskName)} color="primary">
+                        <Button
+                            onClick={() => {
+                                // TODO: Add validation for when task name is empty.
+                                progressStore.addNewTask(this.taskName);
+                                this.taskName = '';
+                            }}
+                            color="primary"
+                        >
+                            Erstellen
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={progressStore.showAddStoryModal} onClose={() => (progressStore.showAddStoryModal = false)} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Neue Story anlegen</DialogTitle>
+                    <DialogContent>
+                        <TextField autoFocus margin="dense" id="title" label="Name" fullWidth required onChange={(event) => (this.storyName = event.target.value)} />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={() => {
+                                progressStore.showAddTaskModal = false;
+                                this.storyName = '';
+                            }}
+                            color="primary"
+                        >
+                            Abbrechen
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                // TODO: Add validation for when story name is empty.
+                                progressStore.addNewStory(this.storyName);
+                                this.storyName = '';
+                            }}
+                            color="primary"
+                        >
                             Erstellen
                         </Button>
                     </DialogActions>

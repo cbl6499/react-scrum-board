@@ -10,18 +10,21 @@ import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
 const Container = styled.div`
     margin: 8px;
     border: 1px solid lightgrey;
-    background-color: white;
-    border-radius: 2px;
+    background-color: rgba(207, 215, 216, 0.88);
+    border-radius: 5px;
     display: flex;
     position: relative;
+    width: fit-content;
+    min-height: 156px;
 `;
 
 const TitleContainer = styled.div`
     width: 250px;
+    min-width: 250px;
     display: flex;
 `;
 
-const Title = styled.h2`
+const Title = styled.h3`
     justify-content: center;
     align-self: center;
     margin-left: 20px;

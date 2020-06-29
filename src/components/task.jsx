@@ -6,7 +6,15 @@ import { Card, CardContent } from '@material-ui/core';
 // Custom props for material ui components can not be of type boolean.
 const TaskCard = styled(Card)`
     background-color: ${(props) => (props.dragging === 'true' ? 'springgreen' : 'white')};
-    margin: 14px;
+    margin: 8px;
+    min-width: 200px;
+    padding: 0px;
+`;
+
+const TaskContent = styled(CardContent)`
+    padding: 4px 0px 0px 4px;
+    color: #172b4d;
+    display: block;
 `;
 
 // Dragable requires draggableId and index.
@@ -29,7 +37,7 @@ export default class Task extends React.Component {
                         variant={'outlined'}
                         dragging={snapshot.isDragging.toString()}
                     >
-                        <CardContent>{this.props.task.content}</CardContent>
+                        <TaskContent>{this.props.task.content}</TaskContent>
                     </TaskCard>
                 )}
             </Draggable>
