@@ -1,63 +1,104 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import '@atlaskit/css-reset'; // css reset.
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import styled from 'styled-components';
 import ProgressStore from '../store/progress';
+import { Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/AddCircleOutline';
 import Row from './row';
+import progressStore from '../store/progress';
+import { observable } from 'mobx';
+
+const Container = styled.div`
+    background-image: url('https://picsum.photos/3072/1585');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: scroll;
+`;
+
+const AddRowButton = styled(Button)`
+    margin: 8px;
+    width: 170px;
+    background-color: darkcyan;
+`;
 
 @observer
 class App extends React.Component {
-    // Handle Drag and Drop.
-    onDragEnd = (result) => {
-        const { destination, source, draggableId, type } = result;
+    @observable taskName = '';
+    @observable storyName = '';
 
-        if (!destination) {
-            return;
-        }
-
-        if (destination.draggableId === source.droppableId && destination.index === source.index) {
-            return;
-        }
-
-        if (type === 'Row') {
-            ProgressStore.moveRow(source, destination, draggableId);
-        }
-
-        // We need to use forceUpdate because of nesting problems, which hinder a rerender.
-        if (type === ProgressStore.activeRowId) {
-            const start = ProgressStore.rows[ProgressStore.activeRowId].columns[source.droppableId];
-            const finish = ProgressStore.rows[ProgressStore.activeRowId].columns[destination.droppableId];
-
-            if (start === finish) {
-                ProgressStore.moveInList(start, source, destination, draggableId);
-                this.forceUpdate();
-                return;
-            }
-
-            // Moving from one list to another.
-            ProgressStore.moveToList(start, finish, source, destination, draggableId);
-            this.forceUpdate();
-        }
-    };
-
-    // DragDropContext requires onDragEnd.
-    // DragDropContext needs to return a function as child.
     render() {
         return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                <Droppable droppableId="row-dropzone" type={'Row'}>
-                    {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {ProgressStore.rowOrder.map((rowOrder, index) => {
-                                const row = ProgressStore.rows[rowOrder];
+            <Container>
+                {ProgressStore.rowOrder.map((rowOrder, index) => {
+                    const row = ProgressStore.rows[rowOrder];
 
-                                return <Row key={row.id} row={row} index={index} />;
-                            })}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+                    return <Row key={row.id} row={row} index={index} />;
+                })}
+                <AddRowButton variant="contained" endIcon={<AddIcon />} onClick={() => (progressStore.showAddStoryModal = true)}>
+                    Neue Story
+                </AddRowButton>
+
+                <Dialog open={progressStore.showAddTaskModal} onClose={() => (progressStore.showAddTaskModal = false)} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Neuer Task erstellen</DialogTitle>
+                    <DialogContent>
+                        <TextField autoFocus margin="dense" id="title" label="Name" fullWidth required onChange={(event) => (this.taskName = event.target.value)} />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={() => {
+                                progressStore.showAddTaskModal = false;
+                                this.taskName = '';
+                            }}
+                            color="primary"
+                        >
+                            Abbrechen
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                // TODO: Add validation for when task name is empty.
+                                progressStore.addNewTask(this.taskName);
+                                this.taskName = '';
+                            }}
+                            color="primary"
+                        >
+                            Erstellen
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={progressStore.showAddStoryModal} onClose={() => (progressStore.showAddStoryModal = false)} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">Neue Story anlegen</DialogTitle>
+                    <DialogContent>
+                        <TextField autoFocus margin="dense" id="title" label="Name" fullWidth required onChange={(event) => (this.storyName = event.target.value)} />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={() => {
+                                progressStore.showAddTaskModal = false;
+                                this.storyName = '';
+                            }}
+                            color="primary"
+                        >
+                            Abbrechen
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                // TODO: Add validation for when story name is empty.
+                                progressStore.addNewStory(this.storyName);
+                                this.storyName = '';
+                            }}
+                            color="primary"
+                        >
+                            Erstellen
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Container>
         );
     }
 }
