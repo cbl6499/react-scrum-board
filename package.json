@@ -12,6 +12,7 @@
         "customize-cra": "^1.0.0",
         "mobx": "^5.15.4",
         "mobx-react": "^6.2.2",
+        "npm-watch": "^0.6.0",
         "react": "^16.13.1",
         "react-app-rewired": "^2.1.6",
         "react-beautiful-dnd": "^13.0.0",
@@ -20,10 +21,19 @@
         "styled-components": "^5.1.1"
     },
     "scripts": {
+        "watch": "npm-watch",
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
+    },
+    "watch": {
+        "build": {
+            "patterns": [
+                "src"
+            ],
+            "extensions": "js,jsx"
+        }
     },
     "browserslist": {
         "production": [
